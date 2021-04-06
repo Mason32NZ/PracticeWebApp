@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - PracticeWebApp</title>
+    <link rel="stylesheet" href="~/lib/bootswatch/flatly/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div id="layoutApp">
+        <header>
+            <nav class="navbar navbar-expand-sm navbar-dark bg-primary border-bottom box-shadow mb-3 user-select-none">
+                <div class="container">
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">PracticeWebApp</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Posts" asp-action="Index">Posts</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="custom-control custom-switch cursor-pointer">
+                        <input type="checkbox" class="custom-control-input" id="darkmodeSwitch" v-model="darkmode" v-on:change="toggleDarkmode()">
+                        <label class="custom-control-label text-light" for="darkmodeSwitch">Dark Mode</label>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <div id="pageApp" class="container">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+
+        <footer class="border-top footer text-muted">
+            <div class="container">
+                &copy; 2021 - PracticeWebApp.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </footer>
+    </div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/vue/vue.global.js"></script>
+<script src="~/lib/twitter-bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/lib/font-awesome/js/all.min.js"></script>
+<script src="~/lib/Darkmode.js/darkmode-js.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+<script>
+    const _layoutApp = {
+        data() {
+            return {
+                darkmode: localStorage.getItem('darkmode')
+            }
+        },
+        methods: {
+            toggleDarkmode() {
+                this.$darkmode.toggle();
+                localStorage.setItem('darkmode', this.darkmode);
+            }
+        }
+    };
+
+    const layoutApp = Vue.createApp(_layoutApp);
+    layoutApp.config.globalProperties.$darkmode = new Darkmode();
+    layoutApp.mount('#layoutApp');
+</script>
+</body>
+</html>

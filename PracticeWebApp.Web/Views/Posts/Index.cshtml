@@ -1,0 +1,66 @@
+﻿@using Newtonsoft.Json
+@model PostsViewModel
+@{
+    ViewData["Title"] = "Posts";
+}
+
+<div class="row post mb-1" v-if="posts.length !== 0" v-for="post in posts" :id="'post-' + post.Id">
+    <div class="media position-relative col mt-3">
+        <img src="https://via.placeholder.com/64" class="profile-picture mr-3">
+        <div class="media-body">
+            <div class="dropdown float-right user-select-none">
+                <i class="fas fa-ellipsis-v dropdown-toggle text-muted" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"></i>
+                <div class="dropdown-menu" style="">
+                    <a class="dropdown-item" href="#">Edit</a>
+                    <a class="dropdown-item" href="#">Delete</a>
+                </div>
+            </div>
+            <div v-on:click="togglePostReply(post.Id)">
+                <h5 class="mt-0">{{post.Name}}</h5>
+                <div class="text-muted small user-select-none">
+                    <span>Posted {{formatDateTime(post.CreatedTimeStampUtc)}}</span><span v-if="post.IsUpdated"> and updated {{formatDateTime(post.UpdatedTimeStampUtc)}}</span>
+                </div>
+                <p>{{post.Message}}</p>
+            </div>
+            <form :id="'post-' + post.Id + '-reply'">
+                <div class="form-group">
+                    <textarea class="form-control mb-1" rows="3"></textarea>
+                    <button type="submit" class="btn btn-primary">Reply</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="row" v-else>
+    <div class="col">
+        <p>There are no posts!</p>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/lib/moment.js/moment.min.js"></script>
+    <script>
+        const _pageApp = {
+            data() {
+                return {
+                    posts: @Html.Raw(JsonConvert.SerializeObject(Model.Posts, Formatting.Indented))
+                }
+            },
+            methods: {
+                formatDateTime(utc) {
+                    return this.$moment.utc(utc).local().fromNow();
+                },
+                togglePostReply(id) {
+                    this.$('#post-' + id + '-reply').toggle();
+                    console.log('test');
+                }
+            }
+        };
+
+        const pageApp = Vue.createApp(_pageApp);
+        pageApp.config.globalProperties.$ = $;
+        pageApp.config.globalProperties.$moment = moment;
+        pageApp.mount('#pageApp');
+    </script>
+}
